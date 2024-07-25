@@ -1,0 +1,46 @@
+{
+  "name": "geoslim/blinqpay",
+  "description": "smart routing system for payment gateways in Laravel.",
+  "type": "project",
+  "keywords": ["laravel", "framework"],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Ikponmwosa George Edomwande",
+      "email": "iedomwande@yahoo.com",
+      "homepage": "https://github.com/Geoslim",
+      "role": "Developer"
+    }
+  ],
+  "require": {
+    "php": "^7.4|^8.0",
+    "illuminate/support": "^7.0 || ^8.0 || ^9.0 || ^10.0 || ^11.0",
+    "guzzlehttp/guzzle": "^7.8.1"
+  },
+  "require-dev": {
+    "phpunit/phpunit": "^8.0|^9.0|^10.0",
+    "orchestra/testbench": "^7.0|^8.0|^9.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Geoslim\\Blinqpay\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Geoslim\\Blinqpay\\Tests\\": "tests"
+    }
+  },
+  "extra": {
+    "laravel": {
+      "providers": [
+        "Geoslim\\Blinqpay\\Providers\\BlinqpayServiceProvider"
+      ],
+      "aliases": {
+        "Blinqpay": "Geoslim\\Blinqpay\\Facades\\Blinqpay"
+      }
+    }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
+}
