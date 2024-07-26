@@ -30,7 +30,7 @@ class BlinqpayServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../../config/blinqpay.php' => config_path('blinqpay.php'),
-            ], 'blinqpay');
+            ], 'blinqpay-config');
         }
 
         return $this;
@@ -39,9 +39,10 @@ class BlinqpayServiceProvider extends ServiceProvider
     protected function registerMigrations(): BlinqpayServiceProvider
     {
         if ($this->app->runningInConsole()) {
-            $this->loadMigrationsFrom([
-                __DIR__ . '/../database/migrations' => database_path('migrations'),
-            ]);
+            $this->publishes([
+                __DIR__.'/../database/migrations' => database_path('migrations'),
+            ], 'blinqpay-migrations');
+
         }
         return $this;
     }
@@ -54,7 +55,7 @@ class BlinqpayServiceProvider extends ServiceProvider
             try {
                 $this->app->bind('blinqpay.' . $name, $class);
             } catch (BlinqpayException $e) {
-                Log::error("Failed to bind adapter {$name}: " . $e->getMessage());
+                Log::error("Failed to bind blinqpay adapter {$name}: " . $e->getMessage());
             }
         }
     }
