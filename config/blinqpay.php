@@ -2,5 +2,43 @@
 
 return [
 
-    // have a fallback processor if all policies fail
+    /*
+    |--------------------------------------------------------------------------
+    | Routing Rules
+    |--------------------------------------------------------------------------
+    |
+    | Define the rules used to determine the best payment processor for each
+    | transaction. Rules can be based on factors like transaction fee, reliability,
+    | currency support, and other criteria.
+    |
+    */
+
+    'routing_rules' => [
+        'transaction_fee' => 0.6, // Weight for fee-based routing
+        'reliability' => 0.4, // Weight for reliability-based routing
+    ],
+
+    /*
+   |--------------------------------------------------------------------------
+   | Package Payment Processor aliases
+   |--------------------------------------------------------------------------
+   |
+   | The payment processor classes and aliases
+   |
+   */
+
+    'adapters' => [
+        // Add payment processor adapters as needed
+    ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Default Processor
+    |--------------------------------------------------------------------------
+    |
+    | The default payment processor to use if none of the routing rules apply.
+    |
+    */
+
+    'default_processor' => env('BLINQPAY_DEFAULT_PROCESSOR'),
 ];

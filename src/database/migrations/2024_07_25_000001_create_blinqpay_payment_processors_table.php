@@ -12,7 +12,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('blinqpay_payment_processors', function (Blueprint $table) {
-
+            $table->id();
+            $table->string('name')->unique();
+            $table->decimal('transaction_fee', 8, 2);
+            $table->decimal('reliability');
+            $table->json('supported_currencies');
+            $table->string('status')->default('active');
+            $table->timestamps();
+            $table->softDeletes();
         });
     }
 

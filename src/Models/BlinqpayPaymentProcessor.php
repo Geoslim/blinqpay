@@ -8,5 +8,18 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class BlinqpayPaymentProcessor extends Model
 {
+    use SoftDeletes;
+    use HasFactory;
 
+    protected $fillable = [
+        'name',
+        'transaction_fee',
+        'reliability',
+        'supported_currencies',
+        'status'
+    ];
+
+    protected $casts = [
+        'supported_currencies' => 'json',
+    ];
 }
