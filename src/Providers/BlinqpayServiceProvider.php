@@ -4,6 +4,9 @@ namespace Geoslim\Blinqpay\Providers;
 
 use Geoslim\Blinqpay\Contracts\BlinqpayPaymentProcessorInterface;
 use Geoslim\Blinqpay\Exceptions\BlinqpayException;
+use Geoslim\Blinqpay\Factories\PaymentProcessorAdapterFactory;
+use Geoslim\Blinqpay\Services\PaymentProcessorManager;
+use Geoslim\Blinqpay\Services\PaymentProcessorRouter;
 use Geoslim\Blinqpay\Services\PaymentProcessorService;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\Log;
@@ -16,7 +19,7 @@ class BlinqpayServiceProvider extends ServiceProvider
         $this->mergeConfigFrom(
             __DIR__ . '/../../config/blinqpay.php', 'blinqpay'
         );
-        $this->bindPaymentProcessorAdapters();
+        $this->bindPaymentProcessorClasses();
     }
 
     public function boot(): void
@@ -40,23 +43,41 @@ class BlinqpayServiceProvider extends ServiceProvider
     {
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../database/migrations' => database_path('migrations'),
+                __DIR__ . '/../database/migrations' => database_path('migrations'),
             ], 'blinqpay-migrations');
 
         }
         return $this;
     }
 
-    protected function bindPaymentProcessorAdapters()
+    protected function bindPaymentProcessorClasses()
     {
-        $adapters = config('blinqpay.adapters');
+        // Bind the PaymentProcessorRouter to the 'blinqpay' key
+        $this->app->singleton('blinqpay', function ($app) {
+            return new PaymentProcessorRouter(
+                $app->make(PaymentProcessorService::class),
+                $app->make(PaymentProcessorAdapterFactory::class),
+            );
+        });
 
-        foreach ($adapters as $name => $class) {
-            try {
-                $this->app->bind('blinqpay.' . $name, $class);
-            } catch (BlinqpayException $e) {
-                Log::error("Failed to bind blinqpay adapter {$name}: " . $e->getMessage());
-            }
-        }
+        // Binding AdapterFactory
+        $this->app->singleton(PaymentProcessorAdapterFactory::class, function () {
+            return new PaymentProcessorAdapterFactory();
+        });
+
+        // Binding PaymentProcessorService
+        $this->app->singleton(PaymentProcessorService::class, function ($app) {
+            return new PaymentProcessorService(
+                $app->make(PaymentProcessorManager::class)
+            );
+        });
+
+        // Binding PaymentProcessorRouter with dependencies injected
+        $this->app->singleton(PaymentProcessorRouter::class, function ($app) {
+            return new PaymentProcessorRouter(
+                $app->make(PaymentProcessorService::class),
+                $app->make(PaymentProcessorAdapterFactory::class),
+            );
+        });
     }
 }

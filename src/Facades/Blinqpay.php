@@ -4,6 +4,11 @@ namespace Geoslim\Blinqpay\Facades;
 
 use Illuminate\Support\Facades\Facade;
 
+/**
+ * @method static mixed performTransaction(array $transaction)
+ *
+ * @see \Geoslim\Blinqpay\Contracts\BlinqpayPaymentRoutingInterface
+ */
 class Blinqpay extends Facade
 {
     /**

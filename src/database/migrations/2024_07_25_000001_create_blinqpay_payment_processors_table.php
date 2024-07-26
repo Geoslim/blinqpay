@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('blinqpay_payment_processors', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->decimal('transaction_fee', 8, 2);
+            $table->decimal('transaction_fee');
             $table->decimal('reliability');
             $table->json('supported_currencies');
             $table->string('status')->default('active');

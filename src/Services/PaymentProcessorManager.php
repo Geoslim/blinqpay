@@ -13,9 +13,8 @@ class PaymentProcessorManager
 
     public function getActiveProcessors()
     {
-        return BlinqpayPaymentProcessor::where('active', true)->get();
+        return BlinqpayPaymentProcessor::where('status', 'active')->get();
     }
-
     public function addProcessor(string $name, array $configuration)
     {
         return BlinqpayPaymentProcessor::updateOrCreate(

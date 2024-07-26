@@ -27,9 +27,20 @@ return [
    |
    */
 
-    'adapters' => [
+    'processors' => [
         // Add payment processor adapters as needed
     ],
+
+    /*
+    |--------------------------------------------------------------------------
+    | Supported Currencies
+    |--------------------------------------------------------------------------
+    |
+    | The payment processor classes and aliases
+    |
+    */
+
+    'supported_currencies' => ['NGN', 'USD', 'EUR', 'GBP', 'CAD'],
 
     /*
     |--------------------------------------------------------------------------
