@@ -39,7 +39,7 @@ class BlinqpayServiceProvider extends ServiceProvider
     protected function registerMigrations(): BlinqpayServiceProvider
     {
         if ($this->app->runningInConsole()) {
-            $this->publishesMigrations([
+            $this->loadMigrationsFrom([
                 __DIR__ . '/../database/migrations' => database_path('migrations'),
             ]);
         }
