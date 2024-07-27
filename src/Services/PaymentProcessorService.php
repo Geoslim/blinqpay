@@ -24,10 +24,16 @@ class PaymentProcessorService
         $processors = $this->paymentProcessorManager->getActiveProcessors();
         $supportedProcessors = $this->checkCurrencySupport($processors, $transaction['currency']);
 
-        return $this->decideBestPaymentProcessor($supportedProcessors, $transaction);
+        return $this->decideBestPaymentProcessor($supportedProcessors);
     }
 
-    public function checkCurrencySupport($processors, $currency)
+    /**
+     * @param $processors
+     * @param string $currency
+     * @return array
+     * @throws BlinqpayException
+     */
+    public function checkCurrencySupport($processors, string $currency): array
     {
         $supportedProcessors = [];
 
@@ -58,7 +64,7 @@ class PaymentProcessorService
         return in_array($currency, $supportedCurrencies);
     }
 
-    protected function decideBestPaymentProcessor($supportedProcessors, $transaction)
+    protected function decideBestPaymentProcessor($supportedProcessors)
     {
         $bestProcessor = null;
         $bestScore = -INF;
@@ -74,7 +80,11 @@ class PaymentProcessorService
         return $bestProcessor;
     }
 
-    private function calculateScore($processor)
+    /**
+     * @param BlinqpayPaymentProcessor $processor
+     * @return float|int
+     */
+    private function calculateScore(BlinqpayPaymentProcessor $processor)
     {
         $rules = config('blinqpay.routing_rules');
         $score = 0;

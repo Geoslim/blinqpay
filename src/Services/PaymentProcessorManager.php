@@ -6,15 +6,26 @@ use Geoslim\Blinqpay\Models\BlinqpayPaymentProcessor;
 
 class PaymentProcessorManager
 {
+    private function processorQuery()
+    {
+        return BlinqpayPaymentProcessor::query();
+    }
+
     public function getProcessors()
     {
-        return BlinqpayPaymentProcessor::get();
+        return $this->processorQuery()->get();
     }
 
     public function getActiveProcessors()
     {
-        return BlinqpayPaymentProcessor::where('status', 'active')->get();
+        return $this->processorQuery()->where('status', 'active')->get();
     }
+
+    public function getAProcessor($key, $value)
+    {
+        return $this->processorQuery()->where($key, $value)->first();
+    }
+
     public function addProcessor(string $name, array $configuration)
     {
         return BlinqpayPaymentProcessor::updateOrCreate(
@@ -30,6 +41,6 @@ class PaymentProcessorManager
 
     public function removeProcessor(string $name)
     {
-        return BlinqpayPaymentProcessor::where('name', $name)->delete();
+        return $this->processorQuery()->where('name', $name)->delete();
     }
 }
