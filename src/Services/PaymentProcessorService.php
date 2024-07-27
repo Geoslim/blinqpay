@@ -49,13 +49,13 @@ class PaymentProcessorService
      * @param string $currency
      * @return bool
      */
-    protected function supportsCurrency(BlinqpayPaymentProcessor $processor, string $currency): bool
+    public function supportsCurrency(BlinqpayPaymentProcessor $processor, string $currency): bool
     {
-        if (is_array($processor->supported_currencies)) {
-            return in_array($currency, $processor->supported_currencies);
-        } else {
-            return in_array($currency, explode(',' , $processor->supported_currencies));
-        }
+        $supportedCurrencies = is_array($processor->supported_currencies)
+            ? $processor->supported_currencies
+            : explode(',', $processor->supported_currencies);
+
+        return in_array($currency, $supportedCurrencies);
     }
 
     protected function decideBestPaymentProcessor($supportedProcessors, $transaction)

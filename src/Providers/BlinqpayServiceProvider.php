@@ -2,8 +2,6 @@
 
 namespace Geoslim\Blinqpay\Providers;
 
-use Geoslim\Blinqpay\Contracts\BlinqpayPaymentProcessorInterface;
-use Geoslim\Blinqpay\Exceptions\BlinqpayException;
 use Geoslim\Blinqpay\Factories\PaymentProcessorAdapterFactory;
 use Geoslim\Blinqpay\Services\PaymentProcessorManager;
 use Geoslim\Blinqpay\Services\PaymentProcessorRouter;
@@ -53,27 +51,7 @@ class BlinqpayServiceProvider extends ServiceProvider
     protected function bindPaymentProcessorClasses()
     {
         // Bind the PaymentProcessorRouter to the 'blinqpay' key
-        $this->app->singleton('blinqpay', function ($app) {
-            return new PaymentProcessorRouter(
-                $app->make(PaymentProcessorService::class),
-                $app->make(PaymentProcessorAdapterFactory::class),
-            );
-        });
-
-        // Binding AdapterFactory
-        $this->app->singleton(PaymentProcessorAdapterFactory::class, function () {
-            return new PaymentProcessorAdapterFactory();
-        });
-
-        // Binding PaymentProcessorService
-        $this->app->singleton(PaymentProcessorService::class, function ($app) {
-            return new PaymentProcessorService(
-                $app->make(PaymentProcessorManager::class)
-            );
-        });
-
-        // Binding PaymentProcessorRouter with dependencies injected
-        $this->app->singleton(PaymentProcessorRouter::class, function ($app) {
+        $this->app->bind('blinqpay', function ($app) {
             return new PaymentProcessorRouter(
                 $app->make(PaymentProcessorService::class),
                 $app->make(PaymentProcessorAdapterFactory::class),
