@@ -16,12 +16,17 @@ class PaymentProcessorAdapterFactory
      */
     public function make(string $processorName): BlinqpayPaymentProcessorInterface
     {
+        $adapterClass = config('blinqpay.processors.' . strtolower($processorName));
+
+        if (is_null($adapterClass)) {
+            throw new BlinqpayException('Invalid adapter for processor: ' . $processorName);
+        }
         $adapter = App::make(config('blinqpay.processors.' . strtolower($processorName)));
 
-        if ($adapter instanceof BlinqpayPaymentProcessorInterface) {
-            return $adapter;
+        if (!$adapter instanceof BlinqpayPaymentProcessorInterface) {
+            throw new BlinqpayException('Invalid adapter for processor: ' . $processorName);
         }
 
-        throw new BlinqpayException('Invalid adapter for processor: ' . $processorName);
+        return $adapter;
     }
 }
